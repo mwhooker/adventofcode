@@ -50,4 +50,6 @@ if __name__ == "__main__":
 
 with open("input") as f:
    inp = f.read().strip().split("\n")
+
 print([either_fully_contained(*parse(line)) for line in inp].count(True))
+print([set.isdisjoint(*parse(line)) for line in inp].count(False))
