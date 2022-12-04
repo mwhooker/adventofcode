@@ -18,6 +18,20 @@ vals = {
         "Z": Scissors,
         }
 
+cheat_vals = {
+        "X": -1,
+        "Y": 0,
+        "Z": 1,
+        }
+
+lose_map = {
+        #winning: losing,
+        "A": "C",
+        "B": "A",
+        "C": "B",
+        }
+win_map = {v: k for k, v in lose_map.items()}
+
 def wins(them, us):
     # could use a lookup table or something with comparison operators, but w/e
     if them == Rock:
@@ -41,6 +55,17 @@ def wins(them, us):
             return Lose
         if us == Scissors:
             return Draw
+
+def cheat(them, move):
+    # X means you need to lose
+    # Y means you need to end the round in a draw
+    # Z means you need to win.
+    if cheat_vals[move] == -1:
+        return score(them, lose_map[them])
+    if cheat_vals[move] == 0:
+        return score(them, them)
+    
+    return score(them, win_map[them])
 
 
 def score(them, us):
@@ -84,5 +109,5 @@ if __name__ == "__main__":
 
 with open("input") as f:
    inp = f.read().strip()
-print(sum(map(lambda x: score(*x.split()), inp.split("\n"))))
+print(sum(map(lambda x: cheat(*x.split()), inp.split("\n"))))
 
