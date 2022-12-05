@@ -24,20 +24,35 @@ _stacks = [
         "MDWCQSJ",
         ]
 
-stacks = []
-for s in _stacks:
-    l = list(s)
-    l.reverse()
-    stacks.append(l)
+def get_stacks():
+    stacks = []
+    for s in _stacks:
+        l = list(s)
+        l.reverse()
+        stacks.append(l)
+    return stacks
 
 
 with open("input") as f:
    inp = f.read().strip().split("\n")
 
+# 5.1
+stacks = get_stacks()
 for line in inp:
     _, count, _, source, _, dest = line.split()
-    count, source, dest = int(count), int(source), int(dest)
+    count, source, dest = int(count), int(source) - 1, int(dest) - 1
     for i in range(count):
-        stacks[dest-1].append(stacks[source-1].pop())
+        stacks[dest].append(stacks[source].pop())
+
+print("".join(x[-1] for x in stacks))
+
+
+# 5.2
+stacks = get_stacks()
+for line in inp:
+    _, count, _, source, _, dest = line.split()
+    count, source, dest = int(count), int(source) - 1, int(dest) - 1 
+    stacks[source], rest = stacks[source][:-count], stacks[source][-count:]
+    stacks[dest] += rest
 
 print("".join(x[-1] for x in stacks))
