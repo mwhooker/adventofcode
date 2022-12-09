@@ -76,7 +76,7 @@ class FileTree(object):
         for k in self.dirs:
             if self.dirs[k] <= 100000:
                 s += self.dirs[k]
-        print(s)
+        print("dir space under 100k", s)
 
 
 
@@ -107,3 +107,10 @@ for f in io.cmds:
 ft.dump()
 
 
+free_space = 70000000-ft.dirs["/"]
+need_to_free = 30000000-free_space
+print(free_space, need_to_free)
+
+candidates = [(ft.dirs[k], k) for k in ft.dirs if ft.dirs[k] >= need_to_free]
+candidates.sort()
+print("delete dir of size:", candidates[0])
