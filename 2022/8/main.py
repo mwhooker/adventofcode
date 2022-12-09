@@ -1,3 +1,5 @@
+import numpy as np
+
 with open("input") as f:
    inp = f.read().strip().split("\n")
 
@@ -8,7 +10,6 @@ test = """30373
 65332
 33549
 35390""".split("\n")
-print("\n".join(test))
 
 # forest = test
 
@@ -42,20 +43,60 @@ for y in range(y_len):
                 visible_top(y, x),
                 visible_bottom(y, x)
                 )
-        print(t)
         if any(t):
             i += 1
-            print("True",)
-        else:
-            print("False",)
-    print("")
 
-print(i)
 print(i + (2 * x_len) + (2* y_len) -4) 
 
-# 9409 too high
-# 9035 too high
+# np_forest = np.genfromtxt("""30373
+# 25512
+# 65332
+# 33549
+# 35390""".split(), delimiter=1, dtype=int)
 
-# 3696 is wrong
+np_forest = np.genfromtxt("input", delimiter=1, dtype=int)
 
-# 1731 too low
+def cardinal_score(ar, th):
+    score = 0
+    for x in ar:
+        score += 1
+        if x >= th:
+            break
+    return score
+
+def scenic_score(ar, interest):
+    th = ar.item(*interest)
+    a, b, c, d = (
+    cardinal_score(
+        ar[interest[0], :interest[1]][::-1], # left
+        th
+    ),
+    cardinal_score(
+        ar[interest[0], interest[1]+1:], # right
+        th
+    ),
+    cardinal_score(
+        ar[interest[0]+1:, interest[1]], # down
+        th
+    ),
+    cardinal_score(
+        ar[:interest[0], interest[1]][::-1], # up
+        th
+    )
+    )
+
+    # print("point:", interest,
+    #       "val:", th,
+    #       "abcd", a, b, c, d,
+    #       "score:", a * b * c * d)
+
+    return a * b * c * d
+
+score = 0
+for coord, value in np.ndenumerate(np_forest):
+    # print("({}, {}) {}".format(x, y, value))
+    ss = scenic_score(np_forest, coord)
+    if ss > score:
+        score = ss
+
+print("ss:", score)
