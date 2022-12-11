@@ -62,14 +62,6 @@ class Tail(object):
         if dx <= 1 and dy <= 1:
             return
 
-        # TODO: doesn't do diagonals correctly.
-        """
-        ......        ......
-        ....T.        ....T.
-        ......   ->   ....H.
-        ...H..        ......
-        s.....        s.....
-        """
         self.y = (self.y + self.head.y) // 2
         self.x = (self.x + self.head.x) // 2
         if dx + dy == 3:
@@ -86,14 +78,16 @@ class Tail(object):
 class State(object):
     size = 6
     def __init__(self):
-        self.head = (0,0)
-        self.tail = (0,0)
+        self.tail_states = set()
+        self.update_head(0,0)
+        self.update_tail(0,0)
 
     def update_head(self, x, y):
         self.head = (x, y)
 
     def update_tail(self, x, y):
         self.tail = (x, y)
+        self.tail_states.add((x,y))
 
     def print(self):
         state = [['*', '*', '*', '*', '*', '*'],
@@ -106,7 +100,9 @@ class State(object):
         state[self.tail[1] % self.size][self.tail[0] % self.size] = "T"
         state[self.head[1] % self.size][self.head[0] % self.size] = "H"
         print("\n".join(["".join(x) for x in state]))
+        print(len(self.tail_states))
         print("---")
+
 
 
 
@@ -117,7 +113,7 @@ t = Tail(h)
 s = State()
 
 s.print()
-for line in test:
+for line in inp:
     d, n = line.split()
     n = int(n)
     print(line)
