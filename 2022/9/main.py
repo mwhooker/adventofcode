@@ -49,10 +49,6 @@ class Tail(object):
         self.x = self.y = 0
         self.head = head
 
-    def is_touching(self):
-        dx = abs(self.x - self.head.x)
-        dy = abs(self.y - self.head.y)
-        return dx <= 1 and dy <= 1
 
     def update(self, head):
         """
@@ -60,11 +56,34 @@ class Tail(object):
         Otherwise, if the head and tail aren't touching and aren't in the same row or column, the tail always moves one step diagonally to keep up:
         """
         # import pdb; pdb.set_trace()
-        if self.is_touching():
+        dx = abs(self.x - self.head.x)
+        dy = abs(self.y - self.head.y)
+
+        if dx <= 1 and dy <= 1:
             return
+
         # TODO: doesn't do diagonals correctly.
-        self.x = (self.x + self.head.x) // 2
-        self.y = (self.y + self.head.y) // 2
+        """
+        ......        ......
+        ....T.        ....T.
+        ......   ->   ....H.
+        ...H..        ......
+        s.....        s.....
+        """
+        if dx + dy == 3:
+            if dx == 2:
+                self.x = (self.x + self.head.x) // 2
+                self.y = self.head.y
+            else:
+                self.y = (self.y + self.head.y) // 2
+                self.x = self.head.x
+        else:
+            self.y = (self.y + self.head.y) // 2
+            self.x = (self.x + self.head.x) // 2
+
+
+
+
 
 
 class State(object):
