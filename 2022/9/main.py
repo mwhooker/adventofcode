@@ -70,16 +70,13 @@ class Tail(object):
         ...H..        ......
         s.....        s.....
         """
+        self.y = (self.y + self.head.y) // 2
+        self.x = (self.x + self.head.x) // 2
         if dx + dy == 3:
             if dx == 2:
-                self.x = (self.x + self.head.x) // 2
                 self.y = self.head.y
             else:
-                self.y = (self.y + self.head.y) // 2
                 self.x = self.head.x
-        else:
-            self.y = (self.y + self.head.y) // 2
-            self.x = (self.x + self.head.x) // 2
 
 
 
