@@ -11,6 +11,15 @@ D 1
 L 5
 R 2""".split("\n")
 
+test2 = """R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20""".split("\n")
+
 
 """
 vertical | horizontal
@@ -21,7 +30,8 @@ min -54 -5578
 """
 
 class Head(object):
-    def __init__(self):
+    def __init__(self, state):
+        self.state = state
         self.x = self.y = 0
 
     def move(self, d):
@@ -34,6 +44,7 @@ class Head(object):
                 self.left()
             case "R":
                 self.right()
+        self.state.update_head(self.x, self.y)
 
     def up(self):
         self.y -= 1
@@ -44,16 +55,23 @@ class Head(object):
     def right(self):
         self.x += 1
 
+
 class Tail(object):
-    def __init__(self, head):
+
+    def __init__(self, head, idx, state):
         self.x = self.y = 0
         self.head = head
+        self.id = idx
+        self.state = state
 
-
-    def update(self, head):
+    def update(self):
         """
-        If the head is ever two steps directly up, down, left, or right from the tail, the tail must also move one step in that direction so it remains close enough:
-        Otherwise, if the head and tail aren't touching and aren't in the same row or column, the tail always moves one step diagonally to keep up:
+        If the head is ever two steps directly up, down, left, or right from
+        the tail, the tail must also move one step in that direction so it
+        remains close enough
+
+        Otherwise, if the head and tail aren't touching and aren't in the same
+        row or column, the tail always moves one step diagonally to keep up:
         """
         # import pdb; pdb.set_trace()
         dx = abs(self.x - self.head.x)
@@ -70,34 +88,35 @@ class Tail(object):
             else:
                 self.x = self.head.x
 
-
-
-
+        s.update_tail(self.id, t.x, t.y)
 
 
 class State(object):
-    size = 6
-    def __init__(self):
+    size = 26
+
+    def __init__(self, tail_size):
         self.tail_states = set()
+        self.tail_size = tail_size
+        self.tails = [None] * tail_size
         self.update_head(0,0)
-        self.update_tail(0,0)
+        for i in range(tail_size):
+            self.update_tail(i, 0, 0)
 
     def update_head(self, x, y):
         self.head = (x, y)
 
-    def update_tail(self, x, y):
-        self.tail = (x, y)
-        self.tail_states.add((x,y))
+    def update_tail(self, idx, x, y):
+        self.tails[idx] = (x, y)
+        if idx == 8:
+            self.tail_states.add((x,y))
 
     def print(self):
-        state = [['*', '*', '*', '*', '*', '*'],
-         ['*', '*', '*', '*', '*', '*'],
-         ['*', '*', '*', '*', '*', '*'],
-         ['*', '*', '*', '*', '*', '*'],
-         ['*', '*', '*', '*', '*', '*'],
-         ['*', '*', '*', '*', '*', '*']]
+        state = a = [["*"] * self.size for i in range(self.size)]
 
-        state[self.tail[1] % self.size][self.tail[0] % self.size] = "T"
+        for i in range(self.tail_size):
+            tail = self.tails[i]
+            state[tail[1] % self.size][tail[0] % self.size] = str(i+1)
+
         state[self.head[1] % self.size][self.head[0] % self.size] = "H"
         print("\n".join(["".join(x) for x in state]))
         print(len(self.tail_states))
@@ -107,10 +126,16 @@ class State(object):
 
 
 
+N = 9
 
-h = Head()
-t = Tail(h)
-s = State()
+s = State(N)
+h = Head(s)
+tails = []
+for i in range(N):
+    if i == 0:
+        tails.append(Tail(h, i, s))
+    else:
+        tails.append(Tail(tails[i-1], i, s))
 
 s.print()
 for line in inp:
@@ -119,7 +144,6 @@ for line in inp:
     print(line)
     for i in range(n):
         h.move(d)
-        t.update(h)
-        s.update_head(h.x, h.y)
-        s.update_tail(t.x, t.y)
+        for t in tails:
+            t.update()
         s.print()
