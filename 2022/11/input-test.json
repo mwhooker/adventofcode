@@ -1,0 +1,36 @@
+[
+  {
+    "operation": "old * 19",
+    "starting-items": [
+      79, 98
+    ],
+    "test": 23,
+    "on-false": 3,
+    "on-true": 2,
+    "id": "0"
+  },
+  {
+    "operation": "old + 6",
+    "starting-items": [ 54, 65, 75, 74 ],
+    "test": 19,
+    "on-false": 0,
+    "on-true": 2,
+    "id": "1"
+  },
+  {
+    "operation": "old * old",
+    "starting-items": [79, 60, 97 ],
+    "test": 13,
+    "on-false": 3,
+    "on-true": 1,
+    "id": "2"
+  },
+  {
+    "operation": "old + 3",
+    "starting-items": [74],
+    "test": 17,
+    "on-false": 1,
+    "on-true": 0,
+    "id": "3"
+  }
+]

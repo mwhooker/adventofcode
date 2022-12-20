@@ -1,0 +1,110 @@
+[
+  {
+    "operation": "old * 13",
+    "starting-items": [
+      57
+    ],
+    "test": 11,
+    "on-false": 2,
+    "on-true": 3,
+    "id": "0"
+  },
+  {
+    "operation": "old + 2",
+    "starting-items": [
+      58,
+      93,
+      88,
+      81,
+      72,
+      73,
+      65
+    ],
+    "test": 7,
+    "on-false": 7,
+    "on-true": 6,
+    "id": "1"
+  },
+  {
+    "operation": "old + 6",
+    "starting-items": [
+      65,
+      95
+    ],
+    "test": 13,
+    "on-false": 5,
+    "on-true": 3,
+    "id": "2"
+  },
+  {
+    "operation": "old * old",
+    "starting-items": [
+      58,
+      80,
+      81,
+      83
+    ],
+    "test": 5,
+    "on-false": 5,
+    "on-true": 4,
+    "id": "3"
+  },
+  {
+    "operation": "old + 3",
+    "starting-items": [
+      58,
+      89,
+      90,
+      96,
+      55
+    ],
+    "test": 3,
+    "on-false": 7,
+    "on-true": 1,
+    "id": "4"
+  },
+  {
+    "operation": "old * 7",
+    "starting-items": [
+      66,
+      73,
+      87,
+      58,
+      62,
+      67
+    ],
+    "test": 17,
+    "on-false": 1,
+    "on-true": 4,
+    "id": "5"
+  },
+  {
+    "operation": "old + 4",
+    "starting-items": [
+      85,
+      55,
+      89
+    ],
+    "test": 2,
+    "on-false": 0,
+    "on-true": 2,
+    "id": "6"
+  },
+  {
+    "operation": "old + 7",
+    "starting-items": [
+      73,
+      80,
+      54,
+      94,
+      90,
+      52,
+      69,
+      58
+    ],
+    "test": 19,
+    "on-false": 0,
+    "on-true": 6,
+    "id": "7"
+  }
+]
