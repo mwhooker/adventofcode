@@ -1,3 +1,5 @@
+import math
+import numbers
 import json
 from pprint import pprint
 
@@ -340,6 +342,11 @@ Worry levels are no longer divided by three after each item is inspected;
 you'll need to find another way to keep your worry levels manageable. Starting
 again from the initial state in your puzzle input, what is the level of monkey
 business after 10000 rounds?
+
+
+
+###########
+test is always prime, so maybe we need to store factors
 """
 
 
@@ -348,26 +355,63 @@ def get_monkeys(fname):
         monkeys = json.load(f, object_hook=Monkey.from_json)
     return monkeys
 
+class Factors(numbers.Number):
 
+    def __init__(self, n):
+        self.f = self._factors(n)
 
+    def square(self):
+        self.f.append(2)
+        return self
+
+    def value(self):
+        a = 1
+        for x in self.f:
+            a *= x
+        return a
+
+    def _factors(self, n):
+        f = []
+        while n % 2 == 0:
+            f.append(2)
+            n /= 2
+        for i in range(3, int(math.sqrt(n))+1, 2):
+            while (n % i == 0):
+                f.append(i)
+                n /= i
+        if n > 2:
+            f.append(n)
+        return f
+
+    def divisible_by(self, other):
+        return other in self.f
+
+    def __add__(self, other):
+        a = self.value() + other
+        self.f = self._factors(a)
+        return self
+
+    def __mul__(self, other):
+        self.f.append(other)
+        return self
 
 
 class Monkey(object):
     def __init__(self, id_, items, operation, test):
         self.id = int(id_)
         self.inspection_count = 0
-        self.items = items
+        self.items = [Factors(i) for i in items]
         self.operation = operation
         self.test = test
 
     def __str__(self):
-        return "Monkey {}\n\tItems: {}\n\tInspections: {}".format(self.id,
-                                                                  self.items,
+        return "Monkey {}\n\tItems: \n\tInspections: {}".format(self.id,
+                                                                  # self.items,
                                                                   self.inspection_count)
 
     @staticmethod
     def from_json(json_dct):
-        test = lambda x: json_dct["on-true"] if x % json_dct["test"] == 0 else json_dct["on-false"]
+        test = lambda x: json_dct["on-true"] if x.divisible_by(json_dct["test"]) else json_dct["on-false"]
         return Monkey(json_dct["id"],
                       json_dct["starting-items"],
                       json_dct["operation"],
@@ -385,10 +429,10 @@ class Monkey(object):
             if self.id == 1:
                 worry = head + 6
             if self.id == 2:
-                worry = head ** 2
+                worry = head.square()
             if self.id == 3:
                 worry = head + 3
-            print(worry)
+            # print(worry)
             #print("\t\tWorry level {} to {}".format(self.operation, worry))
             # worry //= 3
             #print("\t\tMonkey gets bored with item. "
@@ -401,7 +445,7 @@ class Monkey(object):
 
 
 monkeys = get_monkeys("input-test.json")
-for i in range(1000):
+for i in range(20):
     print("round:", i)
     for monkey in monkeys:
         mvs = monkey.process()
